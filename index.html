@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Joseph & Helga — Wedding Invitation</title>
+  <link rel="stylesheet" href="splash.css"/>
+</head>
+<body>
+
+  <!-- ══ BACKGROUND STAGE ══ -->
+  <div id="stage">
+
+    <!-- Letter that peeks out of the envelope -->
+    <div id="letter-peek">
+      <p class="letter-date">October · 3rd · 2026</p>
+      <div class="letter-divider"></div>
+      <h1 class="letter-names">Joseph <em>&amp;</em> Helga</h1>
+      <!--<p class="letter-tagline">request the pleasure of your company</p>-->
+    </div>
+
+    <!-- The envelope -->
+    <div id="envelope-wrap">
+      <div class="envelope-body">
+        <div class="env-bottom"></div>
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+
+        <!-- Top flap that folds open -->
+        <div class="env-top-flap" id="topFlap">
+          <svg width="320" height="120" viewBox="0 0 320 120">
+            <polygon points="0,0 320,0 160,118" fill="#e8d8c0"/>
+            <polygon points="0,0 320,0 160,118" fill="none" stroke="#c9a96e" stroke-width="0.8" opacity="0.5"/>
+          </svg>
+        </div>
+
+        <div class="env-gold-border"></div>
+
+        <!-- Wax seal — click to open -->
+        <div class="wax-seal" id="waxSeal">
+          <svg width="30" height="30" viewBox="0 0 30 30">
+            <text x="15" y="20" text-anchor="middle"
+              font-family="Cormorant Garamond, serif"
+              font-size="13" fill="#c9a96e" font-style="italic">J&amp;H</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint-text" id="hintText">tap the seal to open</p>
+
+    <!-- ══ INVITATION CARD (shown after envelope opens) ══ -->
+    <div id="invitation-card">
+      <div class="inv-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <p class="inv-label">Together with their families</p>
+      <h1 class="inv-names">Joseph<br><em>&amp;</em> Helga</h1>
+      <div class="inv-divider"></div>
+      <p class="inv-date">October · 3rd · 2026</p>
+
+      <!-- This button takes guests to your main website -->
+      <button class="inv-btn" id="enterBtn">View Invitation</button>
+    </div>
+
+  </div>
+  <audio id="bgMusic" src="background.mp3.mp3" preload="auto"></audio>
+  <script src="splash.js"></script>
+</body>
+</html>

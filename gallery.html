@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Joseph & Helga</title>
+
+  <!-- SAME FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <!-- SAME CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Gallery page specific - maintains original design system */
+    .gallery-page {
+      background: var(--cream);
+    }
+
+    /* Masonry grid using CSS Grid for better control */
+    .masonry-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px 100px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .masonry-item {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: none;
+      transition: var(--transition);
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .masonry-item:nth-child(4) {
+      grid-row: span 1;
+    }
+
+    .masonry-item:nth-child(5) {
+      grid-row: span 2;
+    }
+
+    .masonry-item:nth-child(7) {
+      grid-column: span 1;
+    }
+
+    .masonry-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .masonry-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.4s ease;
+    }
+
+    .masonry-overlay span {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-weight: 300;
+    }
+
+    .masonry-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .masonry-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .masonry-item:hover .masonry-overlay {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .masonry-item:hover .masonry-overlay span {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hidden-image {
+      display: none;
+    }
+
+    /* Gallery header */
+    .gallery-header-page {
+      text-align: center;
+      padding: 140px 20px 40px;
+      background: var(--cream);
+    }
+
+    .gallery-header-page .section-label {
+      margin-bottom: 1rem;
+    }
+
+    .gallery-header-page .section-title {
+      margin-bottom: 0;
+    }
+
+    /* Back button - matches navigation style */
+    .back-btn {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      font-weight: 400;
+      transition: var(--transition-fast);
+      text-decoration: none;
+      cursor: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .back-btn:hover {
+      background: var(--gold);
+      color: var(--white);
+      border-color: var(--gold);
+      transform: translateX(-3px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    /* Floating music button for gallery */
+    .gallery-music-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: var(--transition-fast);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      color: var(--white);
+    }
+
+    .gallery-music-toggle:hover {
+      background: var(--gold);
+      color: var(--black);
+      transform: scale(1.1);
+      border-color: var(--gold);
+    }
+
+    .gallery-music-toggle.playing .music-label {
+      animation: galleryPulse 1s ease infinite;
+    }
+
+    @keyframes galleryPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Custom lightbox */
+    .gallery-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.96);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .gallery-lightbox.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-img-wrap {
+      max-width: 90vw;
+      max-height: 90vh;
+      position: relative;
+    }
+
+    .lightbox-img-wrap img {
+      max-width: 90vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .lightbox-close,
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.5rem;
+      cursor: none;
+      transition: all 0.3s ease;
+      padding: 1rem;
+      z-index: 10001;
+    }
+
+    .lightbox-close {
+      top: 20px;
+      right: 30px;
+      font-size: 1rem;
+    }
+
+    .lightbox-prev {
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+    }
+
+    .lightbox-next {
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3rem;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .masonry-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 40px 30px 80px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .masonry-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 30px 20px 60px;
+      }
+      
+      .gallery-header-page {
+        padding: 110px 20px 30px;
+      }
+      
+      .back-btn {
+        top: 20px;
+        left: 20px;
+        padding: 8px 18px;
+        font-size: 0.6rem;
+      }
+      
+      .gallery-music-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
+      }
+      
+      .lightbox-prev,
+      .lightbox-next {
+        font-size: 2rem;
+      }
+      
+      .lightbox-prev {
+        left: 15px;
+      }
+      
+      .lightbox-next {
+        right: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .masonry-grid {
+        padding: 20px 16px 50px;
+        gap: 16px;
+      }
+    }
+
+    /* Hide custom cursor on mobile */
+    @media (max-width: 768px) {
+      .masonry-item,
+      .back-btn,
+      .gallery-music-toggle {
+        cursor: pointer;
+      }
+    }
+  </style>
+</head>
+<body class="gallery-page">
+
+  <!-- CUSTOM CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursor-follower"></div>
+
+  <!-- BACK BUTTON -->
+  <a href="main.html" class="back-btn">← Back to Home</a>
+
+  <!-- GALLERY HEADER -->
+  <div class="gallery-header-page">
+    <p class="section-label reveal-fade">Captured Moments</p>
+    <h2 class="section-title reveal-up">Our Gallery</h2>
+    <div class="separator" style="margin: 20px auto 0;">
+      <span></span>
+      <span class="sep-icon">✦</span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- MASONRY GRID -->
+  <div class="masonry-grid" id="masonryGrid">
+    <div class="masonry-item" data-src="images/imag1.jpg">
+  <img src="images/imag1.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item" data-src="images/imag2.jpg">
+  <img src="images/imag2.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item" data-src="images/imag3.jpg">
+  <img src="images/imag3.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item" data-src="images/imag4.jpg">
+  <img src="images/imag4.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item hidden-image" data-src="images/imag5.jpg">
+  <img src="images/imag5.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item hidden-image" data-src="images/imag6.jpg">
+  <img src="images/imag6.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item hidden-image" data-src="images/imag7.jpg">
+  <img src="images/imag7.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item hidden-image" data-src="images/imag8.jpg">
+  <img src="images/imag8.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+    <div class="masonry-item hidden-image" data-src="images/imag9.jpg">
+  <img src="images/imag9.jpg" alt="Joseph & Helga moment" />
+      <div class="masonry-overlay"><span>View</span></div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-bottom: 80px;">
+  <button id="showMoreBtn" class="inv__cta">
+    Show More Images
+  </button>
+</div>
+
+  <!-- LIGHTBOX -->
+  <div id="galleryLightbox" class="gallery-lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-prev" id="lightboxPrev">‹</button>
+    <button class="lightbox-next" id="lightboxNext">›</button>
+    <div class="lightbox-img-wrap">
+      <img src="" id="lightboxImg" alt="Gallery" />
+    </div>
+  </div>
+
+  <!-- MUSIC TOGGLE -->
+  <div class="gallery-music-toggle" id="musicToggle" title="Toggle Music">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M9 18V5l12-2v13"/>
+      <circle cx="6" cy="18" r="3"/>
+      <circle cx="18" cy="16" r="3"/>
+    </svg>
+    <span class="music-label" style="margin-left: 2px;">♪</span>
+  </div>
+
+  <!-- AUDIO -->
+  <audio id="bgMusic" loop>
+    <source src="background.mp3" />
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Custom cursor
+      const cursor = document.getElementById('cursor');
+      const follower = document.getElementById('cursor-follower');
+      let mouseX = 0, mouseY = 0;
+      let followerX = 0, followerY = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (cursor) {
+          cursor.style.left = mouseX + 'px';
+          cursor.style.top = mouseY + 'px';
+        }
+      });
+
+      function animateFollower() {
+        followerX += (mouseX - followerX) * 0.12;
+        followerY += (mouseY - followerY) * 0.12;
+        if (follower) {
+          follower.style.left = followerX + 'px';
+          follower.style.top = followerY + 'px';
+        }
+        requestAnimationFrame(animateFollower);
+      }
+      animateFollower();
+
+      // Lightbox functionality
+      const galleryItems = document.querySelectorAll('.masonry-item');
+      const lightbox = document.getElementById('galleryLightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
+      
+      let currentIndex = 0;
+      const images = Array.from(galleryItems).map(item => item.dataset.src);
+
+      function openLightbox(index) {
+        currentIndex = index;
+        lightboxImg.src = images[currentIndex];
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      galleryItems.forEach((item, i) => {
+        item.addEventListener('click', () => openLightbox(i));
+      });
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      lightboxPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        lightboxImg.style.opacity = '0';
+        setTimeout(() => {
+          lightboxImg.src = images[currentIndex];
+          lightboxImg.style.opacity = '1';
+        }, 200);
+      });
+
+      lightboxNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex + 1) % images.length;
+        lightboxImg.style.opacity = '0';
+        setTimeout(() => {
+          lightboxImg.src = images[currentIndex];
+          lightboxImg.style.opacity = '1';
+        }, 200);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') lightboxPrev.click();
+        if (e.key === 'ArrowRight') lightboxNext.click();
+      });
+
+      // Music toggle
+      const musicToggle = document.getElementById('musicToggle');
+      const bgMusic = document.getElementById('bgMusic');
+      let musicPlaying = false;
+      
+      if (bgMusic) bgMusic.volume = 0.25;
+
+      musicToggle.addEventListener('click', () => {
+        if (!musicPlaying) {
+          bgMusic.play().catch(() => {});
+          musicToggle.classList.add('playing');
+          musicPlaying = true;
+        } else {
+          bgMusic.pause();
+          musicToggle.classList.remove('playing');
+          musicPlaying = false;
+        }
+      });
+
+      // Scroll reveal animation
+      const revealElements = document.querySelectorAll('.reveal-up, .reveal-fade');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      revealElements.forEach(el => revealObserver.observe(el));
+      
+      // Manually trigger visible for header
+      document.querySelectorAll('.gallery-header-page .reveal-up, .gallery-header-page .reveal-fade').forEach(el => {
+        setTimeout(() => el.classList.add('visible'), 100);
+      });
+    });
+
+const showMoreBtn = document.getElementById('showMoreBtn');
+const hiddenImages = document.querySelectorAll('.hidden-image');
+
+showMoreBtn.addEventListener('click', () => {
+  hiddenImages.forEach(img => {
+    img.style.display = 'block';
+  });
+
+  showMoreBtn.style.display = 'none'; // hide button after click
+});
+
+  </script>
+</body>
+</html>

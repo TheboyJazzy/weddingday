@@ -1,0 +1,261 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Full-screen deep wine background ── */
+#stage {
+  min-height: 100dvh;
+  background: #2a0d19;
+  background-image:
+    repeating-linear-gradient(45deg,  rgba(201,169,110,0.04) 0px, rgba(201,169,110,0.04) 1px, transparent 1px, transparent 14px),
+    repeating-linear-gradient(-45deg, rgba(201,169,110,0.04) 0px, rgba(201,169,110,0.04) 1px, transparent 1px, transparent 14px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ════════════════ ENVELOPE ════════════════ */
+#envelope-wrap {
+  position: relative;
+  z-index: 5;
+  transition: transform 0.7s ease, opacity 0.7s ease;
+}
+#envelope-wrap.opened {
+  transform: scale(0.85) translateY(40px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.envelope-body {
+  width: 320px;
+  height: 210px;
+  background: #f5ece0;
+  border-radius: 4px 4px 6px 6px;
+  position: relative;
+}
+
+/* ── Four envelope faces ── */
+.env-bottom {
+  position: absolute;
+  bottom: 0; left: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-bottom: 120px solid #e8d8c0;
+  z-index: 1;
+}
+.env-left {
+  position: absolute;
+  top: 0; left: 0;
+  border-top: 105px solid transparent;
+  border-bottom: 105px solid transparent;
+  border-left: 145px solid #ede0cc;
+  z-index: 2;
+}
+.env-right {
+  position: absolute;
+  top: 0; right: 0;
+  border-top: 105px solid transparent;
+  border-bottom: 105px solid transparent;
+  border-right: 145px solid #e5d6c0;
+  z-index: 2;
+}
+
+/* ── Top flap (folds back with CSS 3D) ── */
+.env-top-flap {
+  position: absolute;
+  top: -2px; left: 0;
+  z-index: 5;
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.env-top-flap.open {
+  transform: rotateX(180deg) translateY(-2px);
+}
+
+/* ── Inner gold border ── */
+.env-gold-border {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(201,169,110,0.4);
+  border-radius: 2px 2px 4px 4px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Wax seal button ── */
+.wax-seal {
+  position: absolute;
+  bottom: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  background: #5A182E;
+  border-radius: 50%;
+  border: 2px solid #c9a96e;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.wax-seal:hover {
+  transform: translateX(-50%) scale(1.1);
+  background: #6e1e37;
+}
+
+/* ── Letter peeking out of envelope ── */
+#letter-peek {
+  position: absolute;
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 280px;
+  background: #fdf8f0;
+  border: 1px solid rgba(201,169,110,0.25);
+  padding: 24px 24px 20px;
+  text-align: center;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.6s, transform 0.6s ease 0.5s;
+}
+#letter-peek.revealed {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-12px);
+}
+.letter-date {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #9a7a5a;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.letter-divider {
+  width: 40px; height: 1px;
+  background: #c9a96e;
+  margin: 8px auto;
+}
+.letter-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: #5A182E;
+  letter-spacing: 1px;
+}
+.letter-names em { font-style: italic; color: #c9a96e; }
+.letter-tagline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 200;
+  letter-spacing: 3px;
+  color: #b09070;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* ── Hint label beneath seal ── */
+.hint-text {
+  margin-top: 48px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9px;
+  font-weight: 200;
+  letter-spacing: 4px;
+  color: rgba(201,169,110,0.65);
+  text-transform: uppercase;
+  z-index: 2;
+  transition: opacity 0.4s ease;
+}
+.hint-text.hidden { opacity: 0; pointer-events: none; }
+
+/* ════════════════ INVITATION CARD ════════════════ */
+#invitation-card {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 32px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.8s ease 0.4s;
+}
+#invitation-card.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+.inv-ornament {
+  font-family: 'Cormorant Garamond', serif;
+  color: #c9a96e;
+  font-size: 18px;
+  letter-spacing: 8px;
+  margin-bottom: 18px;
+}
+.inv-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200;
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: rgba(201,169,110,0.7);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.inv-names {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 10vw, 58px);
+  font-weight: 300;
+  color: #f5ece0;
+  letter-spacing: 2px;
+  line-height: 1.15;
+}
+.inv-names em { font-style: italic; color: #c9a96e; }
+.inv-divider {
+  width: 60px; height: 1px;
+  background: #c9a96e;
+  margin: 20px auto;
+  opacity: 0.6;
+}
+.inv-date {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(201,169,110,0.8);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+/* ── Main CTA button ── */
+.inv-btn {
+  padding: 16px 48px;
+  background: transparent;
+  border: 1px solid #c9a96e;
+  color: #c9a96e;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  min-width: 220px;
+  min-height: 54px;   /* large touch target for mobile */
+  transition: background 0.3s, color 0.3s;
+}
+.inv-btn:hover {
+  background: #c9a96e;
+  color: #2a0d19;
+}
