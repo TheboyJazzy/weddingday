@@ -169,7 +169,7 @@
         </div>
         <div class="tl-right">
           <h3 class="tl-title">Reception</h3>
-          <p class="tl-desc">Continue the celebration with dinner, dancing, and joyful festivities in honor of the newly married couple.</p>
+          <p class="tl-desc">Continue the celebration with luncheon, dancing, and joyful festivities in honor of the newly married couple.</p>
         </div>
       </div>
 
@@ -425,27 +425,9 @@
 document.getElementById("rsvpForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    // Get form values
-    const fullName = document.getElementById("fullName").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const attendance = document.querySelector('input[name="attendance"]:checked');
-    const message = document.getElementById("message").value.trim();
-
-    // Validation
-    if (!fullName || !email || !attendance) {
-        document.getElementById("rsvpFeedback").innerText =
-            "Please fill in all required fields.";
-        return;
-    }
-
-    // Attendance text
-    const attendanceText =
-        attendance.value === "accept"
-            ? "Joyfully Accept"
-            : "Regretfully Decline";
-
-    // Create WhatsApp message
-    const whatsappMessage =
+    // Create email subject & body
+const subject = "Wedding RSVP";
+const emailBody =
 `Hello, I would like to RSVP.
 
 Full Name: ${fullName}
@@ -453,15 +435,15 @@ Email: ${email}
 Attendance: ${attendanceText}
 Message: ${message || "No message"}`;
 
-    // Encode message for URL
-    const encodedMessage = encodeURIComponent(whatsappMessage);
+// Encode for URL
+const encodedSubject = encodeURIComponent(subject);
+const encodedBody = encodeURIComponent(emailBody);
 
-    // Malawi number format (remove +)
-    const phoneNumber = "19144101265";
+// Your email
+const recipientEmail = "josephandhelga@gmail.com";
 
-    // Redirect to WhatsApp
-    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
-});
+// Open email client
+window.location.href = `mailto:${recipientEmail}?subject=${encodedSubject}&body=${encodedBody}`;
 </script>
 
 
