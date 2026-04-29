@@ -424,26 +424,41 @@
   <script>
 document.getElementById("rsvpForm").addEventListener("submit", function(e) {
     e.preventDefault();
+// Get form values
+const fullName = document.getElementById("fullName").value.trim();
+const email = document.getElementById("email").value.trim();
+const attendance = document.querySelector('input[name="attendance"]:checked');
+const message = document.getElementById("message").value.trim();
 
-    // Create email subject & body
-const subject = "Wedding RSVP";
-const emailBody =
-`Hello, I would like to RSVP.
+// Validation
+if (!fullName || !email || !attendance) {
+    document.getElementById("rsvpFeedback").innerText =
+        "Please fill in all required fields.";
+    return;
+}
+
+// Attendance text
+const attendanceText =
+    attendance.value === "accept"
+        ? "Joyfully Accept"
+        : "Regretfully Decline";
+
+// ✅ FIX: use backticks for multiline string
+const whatsappMessage = `Hello, I would like to RSVP.
 
 Full Name: ${fullName}
 Email: ${email}
 Attendance: ${attendanceText}
 Message: ${message || "No message"}`;
 
-// Encode for URL
-const encodedSubject = encodeURIComponent(subject);
-const encodedBody = encodeURIComponent(emailBody);
+// Encode message for URL
+const encodedMessage = encodeURIComponent(whatsappMessage);
 
-// Your email
-const recipientEmail = "josephandhelga@gmail.com";
+// Number (correct format)
+const phoneNumber = "19144101265";
 
-// Open email client
-window.location.href = `mailto:${recipientEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+// ✅ FIX: wrap URL in backticks
+window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
 </script>
 
 
