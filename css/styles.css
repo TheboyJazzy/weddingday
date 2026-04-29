@@ -412,22 +412,13 @@ blockquote { quotes: none; }
   margin-bottom: 1.8rem;
   opacity: 0;
   transform: translateY(20px);
-
-  /* 🔥 Prevent overflow */
-  max-width: 90vw;
 }
 .hero-name {
-  font-size: clamp(1.8rem, 6vw, 5rem); /* ↓ reduced scale */
+  font-size: clamp(4.5rem, 11vw, 9rem);
   font-weight: 300;
-  line-height: 1.05;
-  letter-spacing: 0.02em;
+  line-height: 0.88;
+  letter-spacing: 0.04em;
   color: var(--white);
-
-  word-break: break-word;
-  text-align: center;
-}
-.hero-name {
-  max-width: 16ch;
 }
 
 .hero-amp {
