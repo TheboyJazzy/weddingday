@@ -420,47 +420,48 @@
   Wedding.init('2026-10-03T16:30:00');
 </script>
 
-
-  <script>
+<script>
 document.getElementById("rsvpForm").addEventListener("submit", function(e) {
     e.preventDefault();
-// Get form values
-const fullName = document.getElementById("fullName").value.trim();
-const email = document.getElementById("email").value.trim();
-const attendance = document.querySelector('input[name="attendance"]:checked');
-const message = document.getElementById("message").value.trim();
 
-// Validation
-if (!fullName || !email || !attendance) {
-    document.getElementById("rsvpFeedback").innerText =
-        "Please fill in all required fields.";
-    return;
-}
+    // Get form values
+    const fullName = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const attendance = document.querySelector('input[name="attendance"]:checked');
+    const message = document.getElementById("message").value.trim();
 
-// Attendance text
-const attendanceText =
-    attendance.value === "accept"
-        ? "Joyfully Accept"
-        : "Regretfully Decline";
+    // Validation
+    if (!fullName || !email || !attendance) {
+        document.getElementById("rsvpFeedback").innerText =
+            "Please fill in all required fields.";
+        return;
+    }
 
-// ✅ FIX: use backticks for multiline string
-const whatsappMessage = `Hello, I would like to RSVP.
+    // Attendance text
+    const attendanceText =
+        attendance.value === "accept"
+            ? "Joyfully Accept"
+            : "Regretfully Decline";
+
+    // Create WhatsApp message
+    const whatsappMessage =
+`Hello, I would like to RSVP.
 
 Full Name: ${fullName}
 Email: ${email}
 Attendance: ${attendanceText}
 Message: ${message || "No message"}`;
 
-// Encode message for URL
-const encodedMessage = encodeURIComponent(whatsappMessage);
+    // Encode message for URL
+    const encodedMessage = encodeURIComponent(whatsappMessage);
 
-// Number (correct format)
-const phoneNumber = "19144101265";
+    // Malawi number format (remove +)
+    const phoneNumber = "19144101265";
 
-// ✅ FIX: wrap URL in backticks
-window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+    // Redirect to WhatsApp
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+});
 </script>
-
 
 <!-- AUDIO & MUSIC TOGGLE -->
 <audio id="bgMusic" loop preload="auto">
