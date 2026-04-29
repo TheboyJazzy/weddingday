@@ -213,17 +213,42 @@ body, html {
   color: rgba(201,169,110,0.7);
   text-transform: uppercase;
 
-  margin-bottom: 12px; /* 🔥 reduced from 16px */
+  margin: 10px 0; /* 🔥 tighter + consistent spacing */
 }
 .inv-names {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(38px, 10vw, 58px);
+  font-size: clamp(26px, 6vw, 56px);
   font-weight: 300;
   color: #f5ece0;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+  line-height: 1.15;
+  gap: 6px;
 
-  line-height: 1.05; /* 🔥 tighter name spacing */
-  margin-bottom: 8px; /* 🔥 controls space below Helga */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+  max-width: 90vw; /* prevents overflow */
+}
+
+/* Names behave like normal text blocks */
+.inv-names span {
+  display: block;
+
+  /* key fix: allows proper wrapping */
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Ampersand spacing */
+.inv-names em {
+  display: block;
+  margin: 8px 0;
+  font-style: italic;
+  color: #c9a96e;
+  font-size: 0.9em;
 }
 .inv-names em { font-style: italic; color: #c9a96e; }
 .inv-divider {
